@@ -55,8 +55,7 @@ class Search:
             state = queue.pop(0)
             Search.add_hash(state)
             neighbors = prb.successor(state)
-            neighbors_reversed = reversed(neighbors)
-            for c in neighbors_reversed:
+            for c in neighbors:
                 if prb.is_goal(c):
                     return Solution(c, prb, start_time)
                 if not Search.add_hash(c):
@@ -81,8 +80,22 @@ class Search:
         return None
 
     @staticmethod
-    def dls():
-        pass
+    def dls(prb: Problem) -> Solution:  # this method get a first state of Problem and do dls for find solution if no
+        # solution is find return None else return the solution
+        start_time = datetime.now()
+        queue = []
+        state = prb.initState
+        queue.append(state)
+        limited_depth = 10
+        depth_counter = 0
+        while len(queue) > 0:
+            state = queue.pop(0)
+            neighbors = prb.successor(state)
+            if prb.is_goal(neighbors[0]):
+                return Solution(neighbors[0], prb, start_time)
+            for c in neighbors:
+                queue.append(c)
+        return None
 
     @staticmethod
     def gn(state):  # if the states already has a gn it will be added up to one and
