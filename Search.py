@@ -65,8 +65,20 @@ class Search:
         return None
 
     @staticmethod
-    def dfs():
-        pass
+    def dfs(prb: Problem) -> Solution:  # this method get a first state of Problem and do dfs for find solution if no
+        # solution is find return None else return the solution
+        start_time = datetime.now()
+        queue = []
+        state = prb.initState
+        queue.append(state)
+        while len(queue) > 0:
+            state = queue.pop(0)
+            neighbors = prb.successor(state)
+            if prb.is_goal(neighbors[0]):
+                return Solution(neighbors[0], prb, start_time)
+            for c in neighbors:
+                queue.append(c)
+        return None
 
     @staticmethod
     def dls():
