@@ -1,4 +1,3 @@
-array = {1: 's', 2: 'ss', 3: 'sss'}
-
-del array[2]
-print(array)
+array = [1, 2, 3, 4, 5, 6]
+for i in array:
+    print(a)
