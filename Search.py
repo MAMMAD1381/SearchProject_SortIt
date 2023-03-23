@@ -103,6 +103,10 @@ class Search:
                 if Search.gn(c) > limited_depth:
                     depth_counter = 0
                     continue
+                Search.add_hash(c)
+                for i in Search.states_hash.keys():
+                    if c.__hash__() == i:
+                        continue
                 queue.append(c)
         return None
 
