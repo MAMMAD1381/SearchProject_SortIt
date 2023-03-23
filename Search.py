@@ -76,6 +76,10 @@ class Search:
             if prb.is_goal(neighbors[0]):
                 return Solution(neighbors[0], prb, start_time)
             for c in neighbors:
+                Search.add_hash(c)
+                for i in Search.states_hash.keys():
+                    if c.__hash__() == i:
+                        continue
                 queue.append(c)
         return None
 
@@ -87,15 +91,22 @@ class Search:
         state = prb.initState
         queue.append(state)
         limited_depth = 10
-        depth_counter = 0
+        # depth_counter = 0
         while len(queue) > 0:
             state = queue.pop(0)
             neighbors = prb.successor(state)
+            # depth_counter += 1
+            Search.gn(state)
             if prb.is_goal(neighbors[0]):
                 return Solution(neighbors[0], prb, start_time)
             for c in neighbors:
+                if Search.gn(c) > limited_depth:
+                    depth_counter = 0
+                    continue
                 queue.append(c)
         return None
+
+    # todo adding hash to dfs and dls
 
     @staticmethod
     def gn(state):  # if the states already has a gn it will be added up to one and
@@ -140,3 +151,8 @@ class Search:
                     del gn_neighbors[s]
                     break
         return neighbors
+
+    @staticmethod
+    def has_exists(state):
+        states_hash = Search.states_hash
+
