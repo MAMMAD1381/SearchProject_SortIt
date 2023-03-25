@@ -76,12 +76,16 @@ class Search:
                 return Solution(state, prb, start_time)
             neighbors = prb.successor(state)
             for c in neighbors:
-                Search.add_hash(c)
-                print(c.__hash__())
-                for i in Search.states_hash.keys():
-                    if c.__hash__() == i:
-                        continue
-                queue.append(c)
+                if c.__hash__() not in Search.states_hash.keys():
+                    queue.append(c)
+                    Search.add_hash(c)
+
+
+
+
+
+
+
         return None
 
     @staticmethod
