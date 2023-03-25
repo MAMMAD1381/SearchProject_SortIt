@@ -79,13 +79,6 @@ class Search:
                 if c.__hash__() not in Search.states_hash.keys():
                     queue.append(c)
                     Search.add_hash(c)
-
-
-
-
-
-
-
         return None
 
     @staticmethod
@@ -94,39 +87,32 @@ class Search:
         start_time = datetime.now()
         queue = []
         state = prb.initState
+        Search.Gn[state.__hash__()] = 0
+        limited_depth = 199
         queue.append(state)
-        limited_depth = 10
-        # depth_counter = 0
         while len(queue) > 0:
-            state = queue.pop(0)
+            state = queue.pop()
+            if prb.is_goal(state):
+                # printing all states cost to final state and the cost of final state and returning it
+                print(Search.Gn, state.__hash__(), Search.Gn[state.__hash__()])
+                return Solution(state, prb, start_time)
             neighbors = prb.successor(state)
-            # depth_counter += 1
-            Search.gn(state)
-            if prb.is_goal(neighbors[0]):
-                return Solution(neighbors[0], prb, start_time)
             for c in neighbors:
-                if Search.gn(c) > limited_depth:
-                    depth_counter = 0
-                    continue
-                Search.add_hash(c)
-                for i in Search.states_hash.keys():
-                    if c.__hash__() == i:
-                        continue
-                queue.append(c)
+                Search.gn(state, c, 1)
+
+                if c.__hash__() not in Search.states_hash.keys() and Search.Gn[c.__hash__()] <= limited_depth:
+                    queue.append(c)
+                    Search.add_hash(c)
+
         return None
 
     # todo adding hash to dfs and dls
 
     @staticmethod
-    def gn(state):  # if the states already has a gn it will be added up to one and
-        # if state has no gn it will be added as 1 value
+    def gn(parent, child, child_cost):
         Gn = Search.Gn
-        if state.__hash__() in Gn:
-            Gn[state.__hash__()] += 1
-        else:
-            Gn[state.__hash__()] = 1
+        Gn[child.__hash__()] = Gn[parent.__hash__()] + child_cost
         Search.Gn = Gn
-        return Gn[state.__hash__()]
 
     @staticmethod
     def minimum_in_dict(dictionary):  # returns the minimum key of minimum value in dictionary
@@ -164,4 +150,3 @@ class Search:
     @staticmethod
     def has_exists(state):
         states_hash = Search.states_hash
-
