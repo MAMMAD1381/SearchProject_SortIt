@@ -30,15 +30,18 @@ class Search:
         start_time = datetime.now()
         queue = []
         state = prb.initState
+        Search.Gn[state.__hash__()] = 0
         queue.append(state)
         while len(queue) > 0:
             state = queue.pop(0)
             neighbors = prb.successor(state)
             for i in neighbors:
-                Search.gn(i)
+                Search.gn(state, i, 1)
                 Search.add_hash(i)
-            Search.sort_neighbors(neighbors)
+            neighbors = Search.sort_neighbors(neighbors)
+
             for c in neighbors:
+                print(c.__hash__(), Search.Gn[c.__hash__()])
                 if prb.is_goal(c):
                     return Solution(c, prb, start_time)
                 queue.append(c)
@@ -99,29 +102,19 @@ class Search:
             neighbors = prb.successor(state)
             for c in neighbors:
                 Search.gn(state, c, 1)
-
                 if c.__hash__() not in Search.states_hash.keys() and Search.Gn[c.__hash__()] <= limited_depth:
                     queue.append(c)
                     Search.add_hash(c)
-
         return None
 
-    # todo adding hash to dfs and dls
-
     @staticmethod
+    # receives the parent and child node and increments the child value based on the parent, and it's value
+    # note that for the first node you should set the value yourself
     def gn(parent, child, child_cost):
         Gn = Search.Gn
         Gn[child.__hash__()] = Gn[parent.__hash__()] + child_cost
         Search.Gn = Gn
-
-    @staticmethod
-    def minimum_in_dict(dictionary):  # returns the minimum key of minimum value in dictionary
-        min_value = min(dictionary.values())
-        for i in dictionary:
-            if dictionary[i] == min_value:
-                return i
-            else:
-                return False
+        return Gn[child.__hash__()]
 
     @staticmethod
     def add_hash(state):  # adds a state to a dict base on hash as key & object as value
@@ -146,7 +139,3 @@ class Search:
                     del gn_neighbors[s]
                     break
         return neighbors
-
-    @staticmethod
-    def has_exists(state):
-        states_hash = Search.states_hash
