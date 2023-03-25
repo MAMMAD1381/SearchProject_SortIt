@@ -71,12 +71,13 @@ class Search:
         state = prb.initState
         queue.append(state)
         while len(queue) > 0:
-            state = queue.pop(0)
+            state = queue.pop()
+            if prb.is_goal(state):
+                return Solution(state, prb, start_time)
             neighbors = prb.successor(state)
-            if prb.is_goal(neighbors[0]):
-                return Solution(neighbors[0], prb, start_time)
             for c in neighbors:
                 Search.add_hash(c)
+                print(c.__hash__())
                 for i in Search.states_hash.keys():
                     if c.__hash__() == i:
                         continue
