@@ -20,6 +20,20 @@ class Problem:
                 return False
         return True
 
+    @staticmethod
+    def heuristic(state: State) -> int:  # this method returns a value based on how far a state is from goal
+        n=0
+        o=0
+        for i in state.pipes:
+            if not (i.is_full() or i.is_empty()):
+                o+=min(len(i.stack) ,(i.limit -len(i.stack))) #moves to either empty a pipe or fill it
+            for j in range(0, len(i.stack)):
+                if i.stack[0] != i.stack[j]:
+                    n+= len(i.stack) - j #upper balls that we need to remove
+                    break
+        return (int) (n+ o/2)
+
+
     # this method for every state gives every possible states form this self and return it
     def successor(self, state: State) -> list:
         child = []

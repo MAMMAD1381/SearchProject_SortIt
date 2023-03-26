@@ -75,6 +75,7 @@ class Search:
         queue.append(state)
         while len(queue) > 0:
             state = queue.pop()
+            print(prb.heuristic(state))
             if prb.is_goal(state):
                 return Solution(state, prb, start_time)
             neighbors = prb.successor(state)
