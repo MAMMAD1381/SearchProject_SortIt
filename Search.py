@@ -135,7 +135,7 @@ class Search:
             neighbors = Search.sort_neighbors_fn(neighbors)
 
             for c in neighbors:
-                print(c.__hash__(), Search.Gn[c.__hash__()])
+                print(c.__hash__(), Search.Fn[c.__hash__()])
                 if prb.is_goal(c):
                     return Solution(c, prb, start_time)
                 queue.append(c)
@@ -236,6 +236,6 @@ class Search:
     @staticmethod
     def fn(state):
         gn = Search.Gn[state.__hash__()]
-        hn = Problem.heuristic(state)
+        hn = Heuristic.heuristic(state)
         Search.Fn[state.__hash__()] = gn + hn
         pass
