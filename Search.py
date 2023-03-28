@@ -186,6 +186,53 @@ class Search:
                 print(cut_off)
         return None
 
+
+    parent = {}
+    second_best = {}
+    @staticmethod
+    def rbfs(prb: Problem) -> Solution:  # this method get a first state of Problem and do rbfs for find solution if no
+        # solution is find return None else return the solution
+        start_time = datetime.now()
+        queue = []
+
+        state = prb.initState
+        Search.Gn[state.__hash__()] = 0
+        hn = Heuristic(state)
+
+        queue.append(state)
+        while len(queue) > 0:
+            state = queue.pop(0)
+            neighbors = prb.successor(state)
+            for i in neighbors:
+                Search.gn(state, i, 1)
+                Search.fn(i, hn)
+                Search.add_hash(i)
+            neighbors = Search.sort_neighbors_fn(neighbors)
+            Search.parent[neighbors[1].__hash__()] = neighbors[0]
+            Search.second_best[neighbors[1].__hash__()] = Search.Fn[neighbors[1].__hash__()]
+
+            for c in neighbors:
+                # for i in c.pipes:
+                #     print(i.stack)
+                # print('------')
+                if Search.Fn[c.__hash__()] <= min(Search.second_best.values()):
+                    if prb.is_goal(c):
+                        return Solution(c, prb, start_time)
+                    queue.append(c)
+                    queue = Search.sort_neighbors_fn(queue)
+                else:
+                    min_second_best = min(Search.second_best.values())
+                    min_second_key = ''
+                    for key in Search.second_best.keys():
+                        if min_second_best == Search.second_best[key]:
+                            min_second_key = key
+                    Search.Fn[Search.parent[min_second_key].__hash__()] = Search.Fn[c.__hash__()]
+                    queue.append(Search.states_hash[min_second_key])
+                    del Search.second_best[min_second_key]
+                    break
+
+        return None
+
     @staticmethod
     # receives the parent and child node and increments the child value based on the parent, and it's value
     # note that for the first node you should set the value yourself

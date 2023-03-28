@@ -1,0 +1,6 @@
+yellow, yellow, blue, blue, 4
+4
+red, red, green, yellow, 4
+4
+red, blue, blue, green, 4
+red, green, green, yellow, 4

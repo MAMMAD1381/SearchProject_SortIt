@@ -1,0 +1,8 @@
+4
+green, red, red, blue, 4
+4
+yellow, blue, red, blue, 4
+red, yellow, purple, green, 4
+yellow, green, purple, purple, 4
+purple, yellow, green, blue, 4
+4

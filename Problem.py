@@ -5,7 +5,7 @@ from State import State
 
 class Problem:
     def __init__(self, *args):
-        self.path_cost = [1, 1, 1, 1]
+        self.path_cost = [1, 1, 1, 1, 1, 1, 1]
         if type(args[0]) == State:
             self.initState = args[0]
         else:
@@ -55,6 +55,12 @@ class Problem:
             return state.g_n + self.path_cost[2]
         elif state.pipes[pipe_src_ind].stack[-1] == 'yellow':
             return state.g_n + self.path_cost[3]
+        elif state.pipes[pipe_src_ind].stack[-1] == 'pink':
+            return state.g_n + self.path_cost[4]
+        elif state.pipes[pipe_src_ind].stack[-1] == 'purple':
+            return state.g_n + self.path_cost[5]
+        elif state.pipes[pipe_src_ind].stack[-1] == 'orange':
+            return state.g_n + self.path_cost[6]
 
     def set_path_cost(self, cost: list):
         self.path_cost = cost

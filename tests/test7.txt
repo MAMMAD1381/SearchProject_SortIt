@@ -1,0 +1,7 @@
+4
+4
+red, orange, purple, purple, 4
+red, blue, blue, purple, 4
+yellow, blue, yellow, red, 4
+orange, yellow, purple, yellow, 4
+orange, blue, red, orange, 4

@@ -47,21 +47,34 @@ class Heuristic:
             pipe = Pipe([], pipe_limit)
             pipes.append(pipe)
 
+        yatim = []
         for key in color_status.keys():
             for num_colors in range(color_status[key]):
+                best_pipe_to_fill_value = 0
+                best_pipe_to_fill_index = 0
                 best_pipe_to_fill_value = max(best_pipe_for_color[key][1])
-                best_pipe_to_fill_index = best_pipe_for_color[key][1].index(best_pipe_to_fill_value)
-                # best_pipe_for_color[key][0].remove(best_pipe_to_fill_index)
-                # best_pipe_for_color[key][1].remove(best_pipe_to_fill_value)
+                if best_pipe_to_fill_value == 0:
+                    yatim.append(key)
+                    break
+                else:
+                    best_pipe_to_fill_index = best_pipe_for_color[key][1].index(best_pipe_to_fill_value)
                 best_pipe_for_color[key][1][best_pipe_to_fill_index] = -1
-                # print(best_pipe_to_fill_index)
                 for counter in range(pipes[best_pipe_to_fill_index].limit):
                     pipes[best_pipe_to_fill_index].stack.append(key)
-                # for pipe in pipes:
-                #     print(pipe.stack)
+        for baby in yatim:
+            for pipe in pipes:
+                if pipe.is_empty():
+                    for counter in range(pipe.limit):
+                        pipe.stack.append(baby)
+                    break
         if self.is_goal(pipes):
+            print('goal:')
+            for pipe in pipes:
+                print(pipe.stack)
+            print(';')
             return pipes
         else:
+            print('fuck')
             return None
 
     def is_goal(self, pipes) -> bool:  # this method check this state is goal or not
@@ -108,14 +121,14 @@ class Heuristic:
                     break
 
         goal_pipes = Heuristic.goal_pipes
-        # print(goal_pipes)
         for pipe in enumerate(state.pipes):
             for ball in range(min(len(state.pipes[pipe[0]].stack), len(goal_pipes[pipe[0]].stack))):
                 if not goal_pipes[pipe[0]].stack[ball] == state.pipes[pipe[0]].stack[ball]:
                     h += goal_pipes[pipe[0]].limit - ball
                     break
+            # if len(goal_pipes[pipe[0]].stack) == 0:
+            #     h += len(state.pipes[pipe[0]].stack)
                 # print(ball, goal_pipes[pipe[0]].stack[ball], state.pipes[pipe[0]].stack[ball])
-
 
         filled_pipes = 0
         for pipe in state.pipes:
@@ -131,10 +144,6 @@ class Heuristic:
                         break
                 if is_all_one_color:
                     x += 1
-        for pipe in state.pipes:
-            print(pipe.stack)
+        x = x/state.pipes[0].limit
 
         return int(n + o / 2 + h)
-        # return h
-        # return max(n, int(o / 2), h)
-
