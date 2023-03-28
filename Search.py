@@ -89,7 +89,6 @@ class Search:
             neighbors = prb.successor(state)
             for c in neighbors:
                 if c.__hash__() not in Search.states_hash.keys():
-                    print(prb.heuristic(c))
                     queue.append(c)
                     Search.add_hash(c)
         return None
@@ -124,13 +123,14 @@ class Search:
         queue = []
         state = prb.initState
         Search.Gn[state.__hash__()] = 0
+        hn = Heuristic(state)
         queue.append(state)
         while len(queue) > 0:
             state = queue.pop(0)
             neighbors = prb.successor(state)
             for i in neighbors:
                 Search.gn(state, i, 1)
-                Search.fn(i)
+                Search.fn(i, hn)
                 Search.add_hash(i)
             neighbors = Search.sort_neighbors_fn(neighbors)
 
@@ -152,7 +152,8 @@ class Search:
         state = prb.initState
         print(prb.initState.__hash__())
         Search.Gn[state.__hash__()] = 0
-        Search.fn(state)
+        hn = Heuristic(state)
+        Search.fn(state, hn)
         cut_off = Search.Fn[state.__hash__()]
         queue.append(state)
         while len(queue) > 0:
@@ -160,7 +161,7 @@ class Search:
             neighbors = prb.successor(state)
             for i in neighbors:
                 Search.gn(state, i, 1)
-                Search.fn(i)
+                Search.fn(i, hn)
                 Search.add_hash(i)
             neighbors = Search.sort_neighbors_fn(neighbors)
 
@@ -203,6 +204,7 @@ class Search:
         Search.states_hash = states_hash
         return True
 
+    # sorts the neighbors based on gn and returns the neighbors
     @staticmethod
     def sort_neighbors(neighbors):  # sorts the neighbors based on their gn and returns objects of states
         gn_neighbors = {}
@@ -218,6 +220,7 @@ class Search:
                     break
         return neighbors
 
+    # sorts the neighbors based on fn and returns the neighbors
     @staticmethod
     def sort_neighbors_fn(neighbors):
         fn_neighbors = {}
@@ -234,8 +237,7 @@ class Search:
         return neighbors
 
     @staticmethod
-    def fn(state):
+    def fn(state, hn):
         gn = Search.Gn[state.__hash__()]
-        hn = Heuristic.heuristic(state)
-        Search.Fn[state.__hash__()] = gn + hn
+        Search.Fn[state.__hash__()] = gn + hn.heuristic(state)
         pass
